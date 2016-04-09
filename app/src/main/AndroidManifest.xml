@@ -4,14 +4,14 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
+        android:name=".Disastro"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name=".Disastro"
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
@@ -28,7 +28,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value=" AIzaSyDk28muA5yDgC8RBmE1J3UmI7QR0Vj4Nqw" />
 
+        <activity android:name=".ImageInsructions"></activity>
     </application>
-
 
 </manifest>
