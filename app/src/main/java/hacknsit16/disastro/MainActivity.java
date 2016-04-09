@@ -2,10 +2,13 @@ package hacknsit16.disastro;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -149,6 +152,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         String contentText = "A " + obj.getDisaster().toLowerCase() + " is about to strike/has struck your area! Please take measures to protect yourself";
         style.bigText(contentText);
         notif.setStyle(style);
+
+        Intent intent = new Intent(this, ImageInsructions.class);
+        intent.putExtra("disaster", obj.getDisaster());
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(ImageInsructions.class);
+        stackBuilder.addNextIntent(intent);
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        notif.setContentIntent(pendingIntent);
 
         Notification notification = notif.build();
         notification.defaults |= Notification.DEFAULT_VIBRATE;
