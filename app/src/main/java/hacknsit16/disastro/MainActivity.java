@@ -1,17 +1,24 @@
 package hacknsit16.disastro;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -54,6 +61,43 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             });
         }
 
+        Firebase disasterRef = fbref.child("Disaster");
+
+        disasterRef.addChildEventListener(new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String prev) {
+                String disaster = (String) dataSnapshot.child("Disaster").getValue();
+                String latitude = (String) dataSnapshot.child("Latitude").getValue();
+                String longitude = (String) dataSnapshot.child("Longitude").getValue();
+                long time = (long) dataSnapshot.child("Time").getValue();
+                DisasterObject obj = new DisasterObject(disaster, latitude, longitude, time);
+                notifyDisaster(obj);
+                Log.d("HELLO", obj.getDisaster());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String prev) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.d("HELLO", firebaseError.getMessage());
+            }
+        });
+
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -90,5 +134,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng delhi = new LatLng(28.6139, 77.2090);
         map.addMarker(new MarkerOptions().position(delhi));
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(delhi, 7.0F));
+    }
+
+    public void notifyDisaster(DisasterObject obj) {
+        NotificationCompat.Builder notif = new NotificationCompat.Builder(this);
+        notif.setSmallIcon(R.drawable.ic_error);
+        notif.setContentTitle("Danger!");
+        notif.setContentText(obj.getDisaster() + " Alert!");
+        notif.setPriority(2);
+
+
+        NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle();
+        style.setBigContentTitle("Disaster Alert!");
+        String contentText = "A " + obj.getDisaster().toLowerCase() + " is about to strike/has struck your area! Please take measures to protect yourself";
+        style.bigText(contentText);
+        notif.setStyle(style);
+
+        Notification notification = notif.build();
+        notification.defaults |= Notification.DEFAULT_VIBRATE;
+        notification.defaults |= Notification.DEFAULT_SOUND;
+        notification.defaults |= Notification.DEFAULT_LIGHTS;
+
+        NotificationManager nManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        nManager.notify(999, notification);
     }
 }
