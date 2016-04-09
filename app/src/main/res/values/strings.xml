@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Disastro</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="action_settings">Settings</string>
 </resources>
