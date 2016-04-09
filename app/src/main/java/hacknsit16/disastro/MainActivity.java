@@ -3,14 +3,15 @@ package hacknsit16.disastro;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -18,6 +19,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -37,15 +41,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         abar.setTitle("Disaster Map");
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        final Firebase fbref = new Firebase("https://glowing-inferno-197.firebaseio.com/");
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        if(fab!=null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    fbref.child("testMessage").setValue("Test data:" + new SimpleDateFormat("MMM dd ss").format(Calendar.getInstance().getTime()));
+                    Toast.makeText(getApplicationContext(), "Updated!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
