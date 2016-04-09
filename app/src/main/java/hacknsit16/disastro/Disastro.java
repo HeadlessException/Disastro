@@ -13,5 +13,7 @@ public class Disastro extends Application {
     public void onCreate() {
         super.onCreate();
         Firebase.setAndroidContext(this);
+
     }
+
 }
