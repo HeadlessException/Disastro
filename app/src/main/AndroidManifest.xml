@@ -30,6 +30,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ImageInstructions"></activity>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value=" AIzaSyDk28muA5yDgC8RBmE1J3UmI7QR0Vj4Nqw" />
